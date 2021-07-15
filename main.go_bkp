@@ -1,0 +1,237 @@
+
+func isCPF(cpf [11]int) bool {
+	var sum int
+	for idx, factor := 0, 10; idx < 9; idx, factor = idx+1, factor-1 {
+		sum += cpf[idx] * factor
+	}
+
+	sum = (sum * 10) % 11
+	if sum == 10 {
+		sum = 0
+	}
+	if sum != cpf[9] {
+		return false
+	}
+
+	sum = 0
+	for idx, factor := 0, 11; idx < 10; idx, factor = idx+1, factor-1 {
+		sum += cpf[idx] * factor
+	}
+
+	sum = (sum * 10) % 11
+	if sum == 10 {
+		sum = 0
+	}
+	if sum != cpf[10] {
+		return false
+	}
+	return true
+}
+
+func isNIS(nis [11]int) bool {
+	factor := [10]int{3, 2, 9, 8, 7, 6, 5, 4, 3, 2}
+	var sum int
+	for i := 0; i < 10; i++ {
+		sum += nis[i] * factor[i]
+	}
+	sum %=11
+	if sum > 1 {
+		sum = 11 - sum
+	} else {
+		sum = 0
+	}
+	if sum == nis[10] {
+		return true
+	} else {
+		return false
+	}
+}
+
+func cpfToString(cpf [11]int) (str string) {
+	for _, v := range cpf {
+		t := strconv.Itoa(v)
+		str += t
+	}
+	return
+}
+
+
+
+func cpfToInteger(cpf string) (res [11]int) {
+	for i, j := len(cpf), 10; i > 0; i, j = i-1, j-1 {
+		if d, err := strconv.Atoi(cpf[i-1 : i]);
+			err == nil {
+			res[j] = d
+		}
+	}
+	return
+}
+
+func unico(cpf string) {
+	var str string
+	if !isCPF(cpfToInteger(cpf)) {
+		str = "in"
+	}
+	fmt.Printf("O CPF %s é %sválido.\n", cpfToFormated(cpf), str)
+	if isNIS(cpfToInteger(cpf)){
+		fmt.Println("Esse número é um NIS válido.")
+	}
+}
+
+func cpf10(cpf string) {
+	var ret [11]int
+	var num = 1
+	a := cpfToInteger(cpf)
+	arr := a[1:11]
+	fmt.Println("Prováveis CPFs válidos:")
+	for i := 0; i < 11; i++ { // digito variavel
+		for j := 0; j < 10; j++ { // valor atual do digito variavel
+			for k, l := 0, 0; k < 11; k++ { // vasculhando novo array
+				if k == i {
+					ret[k] = j
+				} else {
+					ret[k] = arr[l]
+					l++
+				}
+			}
+			if isCPF(ret) {
+				fmt.Println(num, "-", cpfToFormated(ret))
+				num++
+			}
+		}
+	}
+}
+func cpf09(cpf string) {
+	var ret [11]int
+	var imp [][11]int
+	var num = 1
+	a := cpfToInteger(cpf)
+	arr := a[2:11]
+	for i := 0; i < 11; i++ { // digito variavel 1
+		for ii := i + 1; ii < 11; ii++ { // digito variavel 2
+			for j := 0; j < 10; j++ { // valor atual do digito variavel 1
+				for jj := 0; jj < 10; jj++ { // valor atual do digito variavel 2
+					for k, l := 0, 0; k < 11; k++ { // vasculhando novo array
+						if k == i {
+							ret[k] = j
+						} else if k == ii {
+							ret[k] = jj
+						} else {
+							ret[k] = arr[l]
+							l++
+						}
+					}
+					if isCPF(ret) {
+						imp = append(imp, ret)
+						num++
+					}
+				}
+			}
+		}
+	}
+	fmt.Println("Prováveis CPFs válidos:")
+	for n, i := range imp {
+		fmt.Printf("%2.d - %s\t", n+1, cpfToFormated(i))
+		if n%5 == 4 {
+			fmt.Printf("\n")
+		}
+	}
+}
+func cpf08(cpf string) {
+	var ret [11]int
+	var imp [][11]int
+	var num = 1
+	a := cpfToInteger(cpf)
+	arr := a[2:11]
+	for i := 0; i < 11; i++ { // digito variavel 1
+		for ii := i + 1; ii < 11; ii++ { // digito variavel 2
+			for iii := i + 1; iii < 11; iii++ { // digito variavel 3
+				for j := 0; j < 10; j++ { // valor atual do digito variavel 1
+					for jj := 0; jj < 10; jj++ { // valor atual do digito variavel 2
+						for jjj := 0; jjj < 10; jjj++ { // valor atual do digito variavel 3
+							for k, l := 0, 0; k < 11; k++ { // vasculhando novo array
+								if k == i {
+									ret[k] = j
+								} else if k == ii {
+									ret[k] = jj
+								} else if k == iii {
+									ret[k] = jjj
+								} else {
+									ret[k] = arr[l]
+									l++
+								}
+							}
+							if isCPF(ret) {
+								imp = append(imp, ret)
+								num++
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	fmt.Println("Prováveis CPFs válidos:")
+	for nnn, iii := range imp {
+		fmt.Printf("%2.d - %s\t", nnn+1, cpfToFormated(iii))
+		if nnn%5 == 4 {
+			fmt.Printf("\n")
+		}
+	}
+}
+
+func fixo(cpf [11]int, vari []int) {
+	qt := len(vari)
+	var res [][11]int
+	for i := 0; i < 10; i++ {
+		cpf[vari[0]] = i
+		if qt == 1 {
+			if isCPF(cpf) {
+				res = append(res, cpf)
+			}
+		} else {
+			for j := 0; j < 10; j++ {
+				cpf[vari[1]] = j
+				if qt == 2 {
+					if isCPF(cpf) {
+						res = append(res, cpf)
+					}
+				} else {
+					for k := 0; k < 10; k++ {
+						cpf[vari[2]] = k
+						if qt == 3 {
+							if isCPF(cpf) {
+								res = append(res, cpf)
+							}
+						} else {
+							for l := 0; l < 10; l++ {
+								cpf[vari[3]] = l
+								if qt == 4 {
+									if isCPF(cpf) {
+										res = append(res, cpf)
+									}
+								} else {
+									for m := 0; m < 10; m++ {
+										cpf[vari[4]] = m
+										if qt == 5 {
+											if isCPF(cpf) {
+												res = append(res, cpf)
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	fmt.Println("Prováveis CPFs válidos:")
+	for n, r := range res {
+		fmt.Printf("%2.d - %s\t", n+1, cpfToFormated(r))
+		if n%5 == 4 {
+			fmt.Printf("\n")
+		}
+	}
+}
