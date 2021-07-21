@@ -107,11 +107,22 @@ func testesimples(num [11]int) {
 	if !isNIS(num) {
 		nis = "IN"
 	}
-	fmt.Printf("\n   * VALIDAÇÃO DE NÚMERO PIS E CPF *\n\n")
-	fmt.Printf("  Para número CPF:\n")
-	fmt.Printf("   - %s: %sVÁLIDO\n\n", cpfToFormated(cpfInt), cpf)
-	fmt.Printf("  Para número NIS:\n")
-	fmt.Printf("   - %s: %sVÁLIDO\n\n", nisToFormated(cpfInt), nis)
+	switch termo {
+	case 0:
+		fmt.Printf("\n   * VALIDAÇÃO DE NÚMERO PIS E CPF *\n\n")
+		fmt.Printf("  Para número CPF:\n")
+		fmt.Printf("   - %s: %sVÁLIDO\n\n", cpfToFormated(cpfInt), cpf)
+		fmt.Printf("  Para número NIS:\n")
+		fmt.Printf("   - %s: %sVÁLIDO\n\n", nisToFormated(cpfInt), nis)
+	case 1:
+		fmt.Printf("\n   * VALIDAÇÃO DE NÚMERO DE CPF *\n\n")
+		fmt.Printf("  Para número CPF:\n")
+		fmt.Printf("   - %s: %sVÁLIDO\n\n", cpfToFormated(cpfInt), cpf)
+	case 2:
+		fmt.Printf("\n   * VALIDAÇÃO DE NÚMERO DE PIS *\n\n")
+		fmt.Printf("  Para número NIS:\n")
+		fmt.Printf("   - %s: %sVÁLIDO\n\n", nisToFormated(cpfInt), nis)
+	}
 }
 func variavel(cpfInt []int) {
 	var fim [][11]int
@@ -387,7 +398,7 @@ func testes(num [][11]int) (cpf, nis []string) {
 				cpf = append(cpf, cpfToFormated(ints))
 			}
 		}
-		if termo == 0 || termo == 2{
+		if termo == 0 || termo == 2 {
 			if isNIS(ints) {
 				nis = append(nis, nisToFormated(ints))
 			}
